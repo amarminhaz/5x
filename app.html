@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMARTAP - Unlock Access</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(135deg, #ff6f61, #ff3b2f);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 111, 97, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 111, 97, 0.6);
+        }
+
+        #timer {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        #hiddenLink {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1rem;
+            color: #fff;
+            background: linear-gradient(135deg, #00c853, #00e676);
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #hiddenLink:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 200, 83, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.9rem;
+            }
+
+            button, #hiddenLink {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+
+            #timer {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to AMARTAP</h1>
+        <p id="message">Unlock the link to access exclusive content!</p>
+        <button id="unlockButton">Unlock Now</button>
+        <p id="timer"></p>
+        <a id="hiddenLink" href="#" style="display: none;">Access My Website</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const unlockButton = document.getElementById('unlockButton');
+            const message = document.getElementById('message');
+            const timerDisplay = document.getElementById('timer');
+            const hiddenLink = document.getElementById('hiddenLink');
+
+            const unlockLink = 'https://nanolinks.in/5xrakib';
+            const accessLink = 'https://inbio.me/rakibonzat';
+
+            const storageKey = 'unlockTime';
+
+            function checkUnlockStatus() {
+                const unlockTime = localStorage.getItem(storageKey);
+                if (unlockTime) {
+                    const currentTime = new Date().getTime();
+                    const timeDifference = currentTime - parseInt(unlockTime);
+                    const hoursLeft = 24 - Math.floor(timeDifference / (1000 * 60 * 60));
+
+                    if (hoursLeft > 0) {
+                        message.textContent = 'You have already unlocked the link.';
+                        hiddenLink.href = accessLink;
+                        hiddenLink.style.display = 'inline-block';
+                        startTimer(hoursLeft);
+                    } else {
+                        localStorage.removeItem(storageKey);
+                    }
+                }
+            }
+
+            function startTimer(hoursLeft) {
+                let timeLeft = hoursLeft * 60 * 60; // Convert hours to seconds
+
+                const timerInterval = setInterval(() => {
+                    const hours = Math.floor(timeLeft / 3600);
+                    const minutes = Math.floor((timeLeft % 3600) / 60);
+                    const seconds = timeLeft % 60;
+
+                    timerDisplay.textContent = `Time left: ${hours}h ${minutes}m ${seconds}s`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = 'Time expired. Please unlock again.';
+                        hiddenLink.style.display = 'none';
+                        localStorage.removeItem(storageKey);
+                    } else {
+                        timeLeft--;
+                    }
+                }, 1000);
+            }
+
+            unlockButton.addEventListener('click', function() {
+                window.open(unlockLink, '_blank');
+                const unlockTime = new Date().getTime();
+                localStorage.setItem(storageKey, unlockTime);
+                message.textContent = 'Link unlocked! You now have access for 24 hours.';
+                hiddenLink.href = accessLink;
+                hiddenLink.style.display = 'inline-block';
+                startTimer(24);
+            });
+
+            checkUnlockStatus();
+        });
+    </script>
+</body>
+</html>
